@@ -37,7 +37,11 @@
               {{product.price | formatPrice}}
             </p>
             <button class=" btn btn-primary btn-lg"
-  v-on:click="addToCart">Add to cart</button>
+            v-on:click="addToCart"
+            v-show="canAddToCart"
+            v-if="canAddToCart">Add to cartA</button>
+            <button disabled="true" class=" btn btn-primary btn-lg"
+              v-else >Add to cartB</button>
 
           </div>
         </div>
@@ -60,6 +64,7 @@
             description: "A 25 pound bag of <em>irresistible</em>," + " organic goodness for your cat.",
             price: 1999,
             image: "assets/images/product-fullsize.png",
+            availableInventory: 5
           },
           cart: []
         },
@@ -67,7 +72,16 @@
           addToCart: function() {
             console.log("inside addToCart");
             this.cart.push( this.product.id );
-          }                     
+          }             
+        },
+        computed: {
+          cartItemCount: function() {
+              return this.cart.length || '';
+          }, 
+          canAddToCart: function() {
+            console.log("in canAddToCart: " + this.product.availableInventory > this.cartItemCount);
+            return this.product.availableInventory > this.cartItemCount;
+          }
         },
         filters: {
           formatPrice(price) {  //#B
